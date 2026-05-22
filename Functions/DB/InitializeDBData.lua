@@ -1,0 +1,32 @@
+function FreshSoD_InitializeDBData()
+  if not FRESH_SOD_DB then
+    FRESH_SOD_DB = {}
+  end
+
+  if not FRESH_SOD_DB.characterSettings then
+    FRESH_SOD_DB.characterSettings = {}
+  end
+
+  local defaultSettings = {
+    minimapButton = { hide = false },
+    playerMoney = 0,
+    playerMoneyValidationFailed = false,
+    playerMoneyValidationFailedAt = nil,
+    buffVerifiedDisabled = false,
+    buffValidationFailed = false,
+    buffValidationFailedAt = nil
+  }
+
+  local characterGUID = UnitGUID('player')
+  if not FRESH_SOD_DB.characterSettings[characterGUID] then
+    FRESH_SOD_DB.characterSettings[characterGUID] = defaultSettings
+  end
+
+  for settingName, settingValue in pairs(defaultSettings) do
+    if FRESH_SOD_DB.characterSettings[characterGUID][settingName] == nil then
+      FRESH_SOD_DB.characterSettings[characterGUID][settingName] = settingValue
+    end
+  end
+
+  FRESH_SOD_GLOBAL_SETTINGS = FRESH_SOD_DB.characterSettings[characterGUID]
+end
