@@ -9,17 +9,24 @@ frame:SetScript('OnEvent', function(self, event, ...)
     for inboxIndex = GetInboxNumItems(), 1, -1 do
       local _, _, sender, _, _, _, _, _, _, _, _, isGM = GetInboxHeaderInfo(i)
       if sender and not isGM then
-        if not FreshSoD_IsPlayerVerified(sender) then
+        if not FreshSoD_IsPlayerInGuildRoster(sender) then
           FreshSoD_CancelMailWithMessage(inboxIndex, 'Mail from ' .. sender .. ' blocked - not on my Guild.')
         end
       end
     end
   elseif event == 'TRADE_SHOW' then
     local targetName = GetUnitName('npc', true)
-      if not FreshSoD_IsPlayerVerified(targetName) then
-        FreshSoD_CancelTradeWithMessage('Trade with ' .. targetName .. ' blocked - not on my Guild.')
-        return
+    if not targetName then
+      return
     end
+
+    FreshSoD_CanPerformTradeWithPlayer(targetName, function(canTrade, message)
+      if not canTrade then
+        FreshSoD_CancelTradeWithMessage(message)
+      end
+    end)
+  elseif event == 'TRADE_CLOSED' then
+    FreshSoD_EndTradeVerification()
   elseif event == 'AUCTION_HOUSE_SHOW' then
     FreshSoD_CancelAuctionHouseWithMessage('Auction House blocked')
   end

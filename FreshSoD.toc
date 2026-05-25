@@ -24,18 +24,30 @@ Functions/DB/SaveDBData.lua
 Functions/MinimapButton/MinimapButton.lua
 
 ## Trade Restrictions
-Functions/TradeRestriction/TradeRestriction.lua
 Functions/TradeRestriction/Utils/CancelAuctionHouseWithMessage.lua
 Functions/TradeRestriction/Utils/CancelMailWithMessage.lua
 Functions/TradeRestriction/Utils/CancelTradeWithMessage.lua
 Functions/TradeRestriction/Utils/IsPlayerInGuildRoster.lua
+Functions/TradeRestriction/Utils/IsTradePartnerInMyGuild.lua
 Functions/TradeRestriction/Utils/PrintRestrictionMessage.lua
+Functions/TradeRestriction/Utils/RefreshGuildRoster.lua
+
 
 ## Verification
+Functions/Verification/RegisterTradeVerificationPrefix.lua
+Functions/Verification/ParseTradeVerificationMessage.lua
+Functions/Verification/SendTradeVerificationStatus.lua
+Functions/Verification/TradeVerificationCache.lua
+Functions/Verification/HandleTradeVerificationAddonMessage.lua
+Functions/Verification/TradeVerificationOverlay.lua
+Functions/Verification/TradeVerificationSession.lua
+Functions/Verification/AmIVerified.lua
+Functions/Verification/CanPerformTradeWithPlayer.lua
 Functions/Verification/GoldGainedTracker.lua
 Functions/Verification/IsBuffActive.lua
 Functions/Verification/BuffVerificationTracker.lua
-Functions/Verification/IsPlayerVerified.lua
+
+Functions/TradeRestriction/TradeRestriction.lua
 
 ## View
 View/Menu/Menu.lua
