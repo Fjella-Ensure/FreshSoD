@@ -1,4 +1,4 @@
 function FreshSoD_CancelTradeWithMessage(message)
-    if message then SendChatMessage('[FreshSoD] ' .. message, 'EMOTE') end
+    if message then FreshSoD_PrintRestrictionMessage(message) end
     CancelTrade()
 end

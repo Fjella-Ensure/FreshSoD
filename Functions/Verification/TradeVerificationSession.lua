@@ -34,7 +34,6 @@ function FreshSoD_TryResolveTradeVerification(isTimeout)
 
   if isTimeout and session.partnerVerified == nil then
     session.resolved = true
-    FreshSoD_HideTradeVerificationOverlay()
     local onComplete = session.onComplete
     local targetName = session.targetName
     FreshSoD_ClearTradeVerificationSession()
@@ -47,13 +46,17 @@ function FreshSoD_TryResolveTradeVerification(isTimeout)
   end
 
   session.resolved = true
-  FreshSoD_HideTradeVerificationOverlay()
 
   local canTrade = FreshSoD_AmIVerified() and session.partnerVerified
   local message = canTrade and nil or getTradeBlockedMessage(session)
   local onComplete = session.onComplete
 
   FreshSoD_ClearTradeVerificationSession()
+
+  if canTrade then
+    FreshSoD_HideTradeVerificationOverlay()
+  end
+
   onComplete(canTrade, message)
 end
 

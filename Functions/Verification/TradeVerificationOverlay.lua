@@ -1,4 +1,5 @@
 local overlay
+local OVERLAY_PADDING = 12
 
 local function updateSpinner(self, elapsed)
   self.pulse = (self.pulse or 0) + elapsed
@@ -18,7 +19,6 @@ function FreshSoD_ShowTradeVerificationOverlay()
 
   if not overlay then
     overlay = CreateFrame('Frame', 'FreshSoDTradeVerificationOverlay', TradeFrame, 'BackdropTemplate')
-    overlay:SetAllPoints(TradeFrame)
     overlay:SetFrameStrata('HIGH')
     overlay:SetFrameLevel(TradeFrame:GetFrameLevel() + 20)
     overlay:EnableMouse(true)
@@ -28,7 +28,7 @@ function FreshSoD_ShowTradeVerificationOverlay()
       tile = true,
       tileSize = 32,
       edgeSize = 32,
-      insets = { left = 0, right = 0, top = 0, bottom = 0 },
+      insets = { left = 11, right = 11, top = 11, bottom = 11 },
     })
     overlay:SetBackdropColor(0, 0, 0, 0.85)
 
@@ -39,11 +39,14 @@ function FreshSoD_ShowTradeVerificationOverlay()
 
     overlay.statusText = overlay:CreateFontString(nil, 'OVERLAY', 'GameFontHighlightLarge')
     overlay.statusText:SetPoint('CENTER', 0, -20)
-    overlay.statusText:SetText('Verifying FreshSoD status...')
+    overlay.statusText:SetText('Verifying Guild Found status...')
 
     overlay:SetScript('OnUpdate', updateSpinner)
   end
 
+  overlay:SetSize(TradeFrame:GetWidth() + (OVERLAY_PADDING * 2), TradeFrame:GetHeight() + (OVERLAY_PADDING * 2))
+  overlay:ClearAllPoints()
+  overlay:SetPoint('CENTER', TradeFrame, 'CENTER')
   overlay:Show()
 end
 
