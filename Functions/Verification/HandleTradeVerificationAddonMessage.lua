@@ -8,11 +8,9 @@ addonMessageFrame:SetScript('OnEvent', function(_, event, ...)
     return
   end
 
-  print('HandleTradeVerificationAddonMessage: ' .. event .. ' ' .. ...)
 
   local prefix, message, channel, sender = ...
-  print('HandleTradeVerificationAddonMessage: ' .. prefix .. ' ' .. message .. ' ' .. channel .. ' ' .. sender)
-  if prefix ~= ADDON_PREFIX or channel ~= 'GUILD' or not sender then
+  if prefix ~= ADDON_PREFIX or channel ~= 'WHISPER' or not sender then
     return
   end
 

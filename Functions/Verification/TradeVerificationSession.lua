@@ -54,6 +54,7 @@ function FreshSoD_TryResolveTradeVerification(isTimeout)
   FreshSoD_ClearTradeVerificationSession()
 
   if canTrade then
+    FreshSoD_PrintRestrictionMessage('Verification passed, trading can continue')
     FreshSoD_HideTradeVerificationOverlay()
   end
 
@@ -71,10 +72,13 @@ function FreshSoD_BeginTradeVerification(playerName, onComplete)
     resolved = false,
   }
 
-  FreshSoD_SendTradeVerificationStatus(FreshSoD_AmIVerified(), playerName)
+  local iAmVerified = FreshSoD_AmIVerified()
+  FreshSoD_PrintRestrictionMessage(iAmVerified and 'I have passed verification' or 'I have failed verification')
+  FreshSoD_SendTradeVerificationStatus(iAmVerified, playerName)
 
   local cached = FreshSoD_GetCachedPartnerVerification(playerName)
   if cached ~= nil then
+    FreshSoD_PrintRestrictionMessage(playerName .. ' has ' .. (cached and 'passed' or 'failed') .. ' verification')
     FreshSoD_TradeVerificationSession.partnerVerified = cached
     FreshSoD_TryResolveTradeVerification()
   end
@@ -95,5 +99,6 @@ function FreshSoD_OnTradeVerificationMessageReceived(sender, isVerified)
   end
 
   session.partnerVerified = isVerified
+  FreshSoD_PrintRestrictionMessage(session.targetName .. ' has ' .. (isVerified and 'passed' or 'failed') .. ' verification')
   FreshSoD_TryResolveTradeVerification()
 end
