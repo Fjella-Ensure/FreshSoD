@@ -71,7 +71,7 @@ function FreshSoD_BeginTradeVerification(playerName, onComplete)
     resolved = false,
   }
 
-  FreshSoD_SendTradeVerificationStatus(FreshSoD_AmIVerified())
+  FreshSoD_SendTradeVerificationStatus(FreshSoD_AmIVerified(), playerName)
 
   local cached = FreshSoD_GetCachedPartnerVerification(playerName)
   if cached ~= nil then
