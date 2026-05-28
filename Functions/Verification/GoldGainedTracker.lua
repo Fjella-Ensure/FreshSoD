@@ -8,8 +8,7 @@ end
 local function ValidatePlayerMoneyOnLogin()
   local playerMoney = FreshSoD_GetDBValue('playerMoney')
   local current = GetMoney()
-  if playerMoney ~= current and not FreshSoD_GetDBValue('playerMoneyValidationFailed') then
-    FreshSoD_SaveDBData('playerMoneyValidationFailed', true)
+  if playerMoney ~= current and not FreshSoD_GetDBValue('playerMoneyValidationFailedAt') then
     FreshSoD_SaveDBData('playerMoneyValidationFailedAt', time())
   end
 end

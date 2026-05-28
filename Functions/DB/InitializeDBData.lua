@@ -10,10 +10,8 @@ function FreshSoD_InitializeDBData()
   local defaultSettings = {
     minimapButton = { hide = false },
     playerMoney = 0,
-    playerMoneyValidationFailed = false,
     playerMoneyValidationFailedAt = nil,
     buffVerifiedDisabled = false,
-    buffValidationFailed = false,
     buffValidationFailedAt = nil
   }
 

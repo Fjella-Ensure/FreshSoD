@@ -7,10 +7,12 @@ local HELPER_TOP_GAP = 4
 
 local STATUS_TITLE = {
   valid = { text = 'Valid', r = 0.35, g = 0.8, b = 0.35 },
+  pending = { text = 'Not Started', r = 0.95, g = 0.82, b = 0.25 },
   invalid = { text = 'Invalid', r = 0.82, g = 0.33, b = 0.33 },
 }
 
 local CHECK_PASS_COLOR = { r = 0.35, g = 0.8, b = 0.35 }
+local CHECK_PENDING_COLOR = { r = 0.95, g = 0.82, b = 0.25 }
 local CHECK_FAIL_COLOR = { r = 0.82, g = 0.33, b = 0.33 }
 
 local function getDetectedOnHelperText(failedAt)
@@ -20,49 +22,64 @@ local function getDetectedOnHelperText(failedAt)
 end
 
 local function getVerificationChecks()
-  local playerMoneyValidationFailed = FreshSoD_GetDBValue('playerMoneyValidationFailed')
-  if playerMoneyValidationFailed == nil then
-    playerMoneyValidationFailed = false
-  end
+  local playerMoneyValidationFailedAt = FreshSoD_GetDBValue('playerMoneyValidationFailedAt')
+  local playerMoneyValidationFailed = playerMoneyValidationFailedAt ~= nil
 
   if FreshSoD_UpdateBuffVerification then
     FreshSoD_UpdateBuffVerification()
   end
 
-  local buffValidationFailed = FreshSoD_GetDBValue('buffValidationFailed')
-  if buffValidationFailed == nil then
-    buffValidationFailed = false
-  end
+  local buffValidationFailedAt = FreshSoD_GetDBValue('buffValidationFailedAt')
+  local buffValidationFailed = buffValidationFailedAt ~= nil
 
-  local buffVerificationPassed = not buffValidationFailed
-    and FreshSoD_IsBuffVerificationPassed()
+  local buffVerifiedDisabled = FreshSoD_GetDBValue('buffVerifiedDisabled') == true
+  local buffVerificationPending = not buffValidationFailed and not buffVerifiedDisabled
+  local buffVerificationPassed = not buffValidationFailed and buffVerifiedDisabled
 
   return {
     {
       passed = playerMoneyValidationFailed == false,
       passMessage = 'No tampering detected',
       failMessage = 'Tampering detected',
-      failHelperText = playerMoneyValidationFailed
-        and getDetectedOnHelperText(FreshSoD_GetDBValue('playerMoneyValidationFailedAt')),
+      helperTexts = playerMoneyValidationFailed
+        and { getDetectedOnHelperText(playerMoneyValidationFailedAt) }
+        or nil,
     },
     {
       passed = buffVerificationPassed,
+      pending = buffVerificationPending,
       passMessage = "Discoverer's Delight buff is disabled",
+      pendingMessage = "Discoverer's Delight is active",
       failMessage = buffValidationFailed
         and "Discoverer's Delight was re-enabled"
         or "Discoverer's Delight buff is active",
-      failHelperText = buffValidationFailed
-        and getDetectedOnHelperText(FreshSoD_GetDBValue('buffValidationFailedAt'))
-        or 'Major city inkeepers can disable the buff',
+      helperTexts = buffVerificationPending
+        and {
+          'Major city inkeepers can disable the buff',
+          'This must be turned off by level 10',
+        }
+        or (buffValidationFailed
+          and { getDetectedOnHelperText(buffValidationFailedAt) }
+          or nil),
     },
   }
 end
 
 local function getOverallStatus(checks)
+  local hasPending = false
   for _, check in ipairs(checks) do
-    if not check.passed then
-      return STATUS_TITLE.invalid
+    if check.pending then
+      hasPending = true
     end
+    if not check.passed then
+      if not check.pending then
+        return STATUS_TITLE.invalid
+      end
+    end
+  end
+
+  if hasPending then
+    return STATUS_TITLE.pending
   end
 
   return STATUS_TITLE.valid
@@ -91,7 +108,7 @@ local function ensureVerificationTabLayout(content)
 
   content.titleLabel = content:CreateFontString(nil, 'OVERLAY', 'GameFontHighlightHuge')
   content.checkRows = {}
-  content.checkHelpers = {}
+  content.checkHelperRows = {}
   content.verificationInitialized = true
 end
 
@@ -122,31 +139,44 @@ local function updateVerificationTabDisplay(content)
     firstRowGap = -ROW_GAP
 
     local passed = check.passed
-    local color = passed and CHECK_PASS_COLOR or CHECK_FAIL_COLOR
-    row:SetText('• ' .. (passed and check.passMessage or check.failMessage))
+    local pending = check.pending == true
+    local color = pending and CHECK_PENDING_COLOR or (passed and CHECK_PASS_COLOR or CHECK_FAIL_COLOR)
+    local rowMessage = pending and check.pendingMessage or (passed and check.passMessage or check.failMessage)
+    row:SetText('• ' .. rowMessage)
     row:SetTextColor(color.r, color.g, color.b)
     row:Show()
 
     blockEnd = row
 
-    local helper = content.checkHelpers[index]
-    if check.failHelperText and not passed then
-      if not helper then
-        helper = content:CreateFontString(nil, 'OVERLAY', 'GameFontNormalSmall')
-        content.checkHelpers[index] = helper
+    local helperRows = content.checkHelperRows[index]
+    if not helperRows then
+      helperRows = {}
+      content.checkHelperRows[index] = helperRows
+    end
+
+    local helperTexts = check.helperTexts
+    if helperTexts and #helperTexts > 0 and (not passed or pending) then
+      for helperIndex, helperText in ipairs(helperTexts) do
+        local helper = helperRows[helperIndex]
+        if not helper then
+          helper = content:CreateFontString(nil, 'OVERLAY', 'GameFontNormalSmall')
+          helperRows[helperIndex] = helper
+        end
+
+        applyWrappedText(helper, content, HELPER_INDENT)
+        helper:ClearAllPoints()
+        helper:SetPoint('TOP', blockEnd, 'BOTTOM', 0, -HELPER_TOP_GAP)
+        helper:SetPoint('LEFT', content, 'LEFT', LIST_LEFT_OFFSET + HELPER_INDENT, 0)
+        helper:SetText(helperText)
+        helper:SetTextColor(0.85, 0.85, 0.85)
+        helper:Show()
+
+        blockEnd = helper
       end
+    end
 
-      applyWrappedText(helper, content, HELPER_INDENT)
-      helper:ClearAllPoints()
-      helper:SetPoint('TOP', row, 'BOTTOM', 0, -HELPER_TOP_GAP)
-      helper:SetPoint('LEFT', content, 'LEFT', LIST_LEFT_OFFSET + HELPER_INDENT, 0)
-      helper:SetText(check.failHelperText)
-      helper:SetTextColor(0.85, 0.85, 0.85)
-      helper:Show()
-
-      blockEnd = helper
-    elseif helper then
-      helper:Hide()
+    for helperIndex = (helperTexts and #helperTexts or 0) + 1, #helperRows do
+      helperRows[helperIndex]:Hide()
     end
   end
 
@@ -154,9 +184,14 @@ local function updateVerificationTabDisplay(content)
     content.checkRows[index]:Hide()
   end
 
-  if content.checkHelpers then
-    for index = #checks + 1, #content.checkHelpers do
-      content.checkHelpers[index]:Hide()
+  if content.checkHelperRows then
+    for index = #checks + 1, #content.checkHelperRows do
+      local helperRows = content.checkHelperRows[index]
+      if helperRows then
+        for _, helper in ipairs(helperRows) do
+          helper:Hide()
+        end
+      end
     end
   end
 end

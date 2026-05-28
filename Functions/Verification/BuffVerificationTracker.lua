@@ -1,11 +1,13 @@
 local buffVerificationFrame = CreateFrame('Frame')
+local BUFF_DISABLE_DEADLINE_LEVEL = 10
 
 function FreshSoD_UpdateBuffVerification()
-  if FreshSoD_GetDBValue('buffValidationFailed') then
+  if FreshSoD_GetDBValue('buffValidationFailedAt') then
     return
   end
 
   local buffState = FreshSoD_GetVerificationBuffState()
+  local playerLevel = UnitLevel('player') or 0
 
   if buffState == 'disabled' then
     if not FreshSoD_GetDBValue('buffVerifiedDisabled') then
@@ -15,7 +17,13 @@ function FreshSoD_UpdateBuffVerification()
   end
 
   if buffState == 'active' and FreshSoD_GetDBValue('buffVerifiedDisabled') then
-    FreshSoD_SaveDBData('buffValidationFailed', true)
+    FreshSoD_SaveDBData('buffValidationFailedAt', time())
+    return
+  end
+
+  if buffState == 'active'
+      and not FreshSoD_GetDBValue('buffVerifiedDisabled')
+      and playerLevel >= BUFF_DISABLE_DEADLINE_LEVEL then
     FreshSoD_SaveDBData('buffValidationFailedAt', time())
   end
 end

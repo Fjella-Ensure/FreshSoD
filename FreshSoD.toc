@@ -31,7 +31,7 @@ Functions/TradeRestriction/Utils/IsPlayerInGuildRoster.lua
 Functions/TradeRestriction/Utils/IsTradePartnerInMyGuild.lua
 Functions/TradeRestriction/Utils/PrintRestrictionMessage.lua
 Functions/TradeRestriction/Utils/RefreshGuildRoster.lua
-
+Functions/TradeRestriction/TradeRestriction.lua
 
 ## Verification
 Functions/Verification/RegisterTradeVerificationPrefix.lua
@@ -46,8 +46,6 @@ Functions/Verification/CanPerformTradeWithPlayer.lua
 Functions/Verification/GoldGainedTracker.lua
 Functions/Verification/IsBuffActive.lua
 Functions/Verification/BuffVerificationTracker.lua
-
-Functions/TradeRestriction/TradeRestriction.lua
 
 ## View
 View/Menu/Menu.lua
