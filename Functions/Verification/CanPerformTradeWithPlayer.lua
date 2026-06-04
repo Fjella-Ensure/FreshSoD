@@ -3,8 +3,8 @@ function FreshSoD_CanPerformTradeWithPlayer(playerName, onComplete)
     return
   end
 
-  if not FreshSoD_IsTradePartnerInMyGuild() then
-    onComplete(false, 'Trade with ' .. playerName .. ' blocked - not in my Guild.')
+  if not BonniesUtilities_IsTradePartnerInMyGuild() then
+    onComplete(true)
     return
   end
 

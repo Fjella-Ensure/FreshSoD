@@ -3,7 +3,7 @@ function FreshSoD_MinimapButton_Initialize()
 
     local addonLDB = LibStub('LibDataBroker-1.1'):NewDataObject('FreshSoD', {
         type = 'data source',
-        text = 'Fresh SoD',
+        text = 'Guzu\'s SoD',
         icon = TEXTURE_PATH .. '\\bonnie-round.png',
         OnClick = function(self, btn)
         if btn == 'LeftButton' then
@@ -12,7 +12,7 @@ function FreshSoD_MinimapButton_Initialize()
         end,
         OnTooltipShow = function(tooltip)
         if not tooltip or not tooltip.AddLine then return end
-        tooltip:AddLine('|cffffffffFresh SoD|r\n\nLeft-click to open', nil, nil, nil, nil)
+        tooltip:AddLine('|cffffffffGuzu\'s SoD|r\n\nLeft-click to open', nil, nil, nil, nil)
         end,
     })
 

@@ -22,8 +22,7 @@ local function getDetectedOnHelperText(failedAt)
 end
 
 local function getVerificationChecks()
-  local playerMoneyValidationFailedAt = FreshSoD_GetDBValue('playerMoneyValidationFailedAt')
-  local playerMoneyValidationFailed = playerMoneyValidationFailedAt ~= nil
+  local playerTamperingValidationFailed = BonniesUtilities_GetNaughty() == true
 
   if FreshSoD_UpdateBuffVerification then
     FreshSoD_UpdateBuffVerification()
@@ -38,12 +37,10 @@ local function getVerificationChecks()
 
   return {
     {
-      passed = playerMoneyValidationFailed == false,
+      passed = playerTamperingValidationFailed == false,
       passMessage = 'No tampering detected',
       failMessage = 'Tampering detected',
-      helperTexts = playerMoneyValidationFailed
-        and { getDetectedOnHelperText(playerMoneyValidationFailedAt) }
-        or nil,
+      helperTexts = nil,
     },
     {
       passed = buffVerificationPassed,
@@ -203,5 +200,6 @@ function FreshSoD_InitializeVerificationTab(tabContents)
   end
 
   ensureVerificationTabLayout(content)
+  FreshSoD_EnsureVerificationTabWhisperInput(content)
   updateVerificationTabDisplay(content)
 end

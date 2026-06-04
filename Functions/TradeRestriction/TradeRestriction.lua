@@ -1,13 +1,66 @@
 local frame = CreateFrame('Frame')
-frame:RegisterEvent('TRADE_SHOW')
+local nonGuildTradeCheckScheduled = false
+
+local TRADE_CONTENT_EVENTS = {
+  'TRADE_SHOW',
+  'TRADE_UPDATE',
+  'TRADE_ACCEPT_UPDATE',
+  'TRADE_MONEY_CHANGED',
+  'PLAYER_TRADE_MONEY',
+  'TRADE_PLAYER_ITEM_CHANGED',
+  'TRADE_TARGET_ITEM_CHANGED',
+}
+
+for _, tradeEvent in ipairs(TRADE_CONTENT_EVENTS) do
+  frame:RegisterEvent(tradeEvent)
+end
+
 frame:RegisterEvent('TRADE_CLOSED')
 frame:RegisterEvent('AUCTION_HOUSE_SHOW')
 frame:RegisterEvent('MAIL_INBOX_UPDATE')
 
+local function cancelNonGuildTrade()
+  local partnerName = GetUnitName('npc', true)
+  local hasMoney = type(BonniesUtilities_TradeHasMoney) == 'function'
+    and BonniesUtilities_TradeHasMoney()
+  local message = hasMoney
+    and 'Trade blocked - no gold allowed with non-guild members.'
+    or 'Trade blocked - only whitelisted items allowed with non-guild members.'
+  if partnerName then
+    message = hasMoney
+      and ('Trade with ' .. partnerName .. ' blocked - no gold allowed.')
+      or ('Trade with ' .. partnerName .. ' blocked - only whitelisted items allowed.')
+  end
+  FreshSoD_CancelTradeWithMessage(message)
+end
+
+local function runNonGuildTradeCheck()
+  nonGuildTradeCheckScheduled = false
+  if type(BonniesUtilities_TradeViolatesNonGuildRestrictions) ~= 'function' then
+    return
+  end
+  if BonniesUtilities_TradeViolatesNonGuildRestrictions() then
+    cancelNonGuildTrade()
+  end
+end
+
+local function scheduleNonGuildTradeCheck()
+  if nonGuildTradeCheckScheduled then
+    return
+  end
+  nonGuildTradeCheckScheduled = true
+
+  if C_Timer and C_Timer.After then
+    C_Timer.After(0, runNonGuildTradeCheck)
+  else
+    runNonGuildTradeCheck()
+  end
+end
+
 frame:SetScript('OnEvent', function(self, event, ...)
   if event == 'MAIL_INBOX_UPDATE' then
     for inboxIndex = GetInboxNumItems(), 1, -1 do
-      local _, _, sender, _, _, _, _, _, _, _, _, isGM = GetInboxHeaderInfo(i)
+      local _, _, sender, _, _, _, _, _, _, _, _, isGM = GetInboxHeaderInfo(inboxIndex)
       if sender and not isGM then
         if not FreshSoD_IsPlayerInGuildRoster(sender) then
           FreshSoD_CancelMailWithMessage(inboxIndex, 'Mail from ' .. sender .. ' blocked - not on my Guild.')
@@ -25,7 +78,17 @@ frame:SetScript('OnEvent', function(self, event, ...)
         FreshSoD_CancelTradeWithMessage(message)
       end
     end)
+
+    scheduleNonGuildTradeCheck()
+  elseif event == 'TRADE_UPDATE'
+    or event == 'TRADE_ACCEPT_UPDATE'
+    or event == 'TRADE_MONEY_CHANGED'
+    or event == 'PLAYER_TRADE_MONEY'
+    or event == 'TRADE_PLAYER_ITEM_CHANGED'
+    or event == 'TRADE_TARGET_ITEM_CHANGED' then
+    scheduleNonGuildTradeCheck()
   elseif event == 'TRADE_CLOSED' then
+    nonGuildTradeCheckScheduled = false
     FreshSoD_EndTradeVerification()
   elseif event == 'AUCTION_HOUSE_SHOW' then
     FreshSoD_CancelAuctionHouseWithMessage('Auction House blocked')

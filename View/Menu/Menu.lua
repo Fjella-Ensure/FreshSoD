@@ -51,7 +51,7 @@ settingsFrame:SetPoint('CENTER', UIParent, 'CENTER', 0, 30)
 local function ResetFreshSoDMenuPosition()
   settingsFrame:ClearAllPoints()
   settingsFrame:SetPoint('CENTER', UIParent, 'CENTER', 0, 30)
-  print('|cfff44336[Fresh SoD]|r Menu position reset to default.')
+  print('|cfff44336[Guzu\'s SoD]|r Menu position reset to default.')
 end
 
 _G.ResetFreshSoDMenuPosition = ResetFreshSoDMenuPosition
@@ -99,7 +99,7 @@ titleBarBackground:SetTexture(TEXTURE_PATH .. '\\header.png')
 titleBarBackground:SetTexCoord(0, 1, 0, 1)
 local settingsTitleLabel = titleBar:CreateFontString(nil, 'OVERLAY', 'GameFontHighlightHuge')
 settingsTitleLabel:SetPoint('CENTER', titleBar, 'CENTER', 0, 4)
-settingsTitleLabel:SetText('Fresh SoD')
+settingsTitleLabel:SetText('Guzu\'s SoD')
 settingsTitleLabel:SetTextColor(0.922, 0.871, 0.761)
 
 local dividerFrame = CreateFrame('Frame', nil, settingsFrame)

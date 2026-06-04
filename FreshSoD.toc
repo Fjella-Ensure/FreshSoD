@@ -2,7 +2,7 @@
 ## Title: FreshSoD
 ## Version: 1.0.0
 ## Author: BonniesDad
-## Notes: Addon to ensure a Fresh SoD playthrough for a guild. 
+## Notes: Addon to ensure a fresh SoD playthrough for Guzu's guild. 
 ## SavedVariables: FRESH_SOD_DB
 
 FreshSoD.lua
@@ -43,11 +43,12 @@ Functions/Verification/TradeVerificationOverlay.lua
 Functions/Verification/TradeVerificationSession.lua
 Functions/Verification/AmIVerified.lua
 Functions/Verification/CanPerformTradeWithPlayer.lua
-Functions/Verification/GoldGainedTracker.lua
 Functions/Verification/IsBuffActive.lua
 Functions/Verification/BuffVerificationTracker.lua
+Functions/Verification/SendTamperingHistory.lua
 
 ## View
 View/Menu/Menu.lua
 View/TabManager/TabManager.lua
+View/VerificationTab/VerificationTabWhisperInput.lua
 View/VerificationTab/VerificationTab.lua
