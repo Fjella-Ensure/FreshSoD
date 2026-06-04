@@ -1,5 +1,5 @@
 ## Interface: 11508
-## Title: FreshSoD
+## Title: Guzu's SoD
 ## Version: 1.0.0
 ## Author: BonniesDad
 ## Notes: Addon to ensure a fresh SoD playthrough for Guzu's guild. 
