@@ -17,6 +17,7 @@ Libs/LibDBIcon-1.0/LibDBIcon-1.0.lua
 ## Functions
 
 ## Database
+Functions/DB/GuildVerificationStatus.lua
 Functions/DB/InitializeDBData.lua
 Functions/DB/GetDBValue.lua
 Functions/DB/SaveDBData.lua
@@ -37,19 +38,27 @@ Functions/TradeRestriction/TradeRestriction.lua
 ## Verification
 Functions/Verification/RegisterTradeVerificationPrefix.lua
 Functions/Verification/ParseTradeVerificationMessage.lua
+Functions/Verification/ParseGuildVerificationMessage.lua
 Functions/Verification/SendTradeVerificationStatus.lua
+Functions/Verification/SendGuildVerificationStatus.lua
 Functions/Verification/TradeVerificationCache.lua
 Functions/Verification/HandleTradeVerificationAddonMessage.lua
+Functions/Verification/HandleGuildVerificationAddonMessage.lua
 Functions/Verification/TradeVerificationOverlay.lua
 Functions/Verification/TradeVerificationSession.lua
 Functions/Verification/AmIVerified.lua
+Functions/Verification/BroadcastGuildVerificationStatus.lua
 Functions/Verification/CanPerformTradeWithPlayer.lua
 Functions/Verification/IsBuffActive.lua
 Functions/Verification/BuffVerificationTracker.lua
 Functions/Verification/SendTamperingHistory.lua
+
+## Guild Board
+Functions/GuildBoard/GetGuildMemberNames.lua
 
 ## View
 View/Menu/Menu.lua
 View/TabManager/TabManager.lua
 View/VerificationTab/VerificationTabWhisperInput.lua
 View/VerificationTab/VerificationTab.lua
+View/GuildBoardTab/GuildBoardTab.lua

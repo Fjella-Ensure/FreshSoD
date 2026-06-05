@@ -25,4 +25,8 @@ function FreshSoD_InitializeDBData()
   end
 
   FRESH_SOD_GLOBAL_SETTINGS = FRESH_SOD_DB.characterSettings[characterGUID]
+
+  if FreshSoD_EnsureGuildVerificationDB then
+    FreshSoD_EnsureGuildVerificationDB()
+  end
 end

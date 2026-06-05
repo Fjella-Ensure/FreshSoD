@@ -12,12 +12,18 @@ function FreshSoD_UpdateBuffVerification()
   if buffState == 'disabled' then
     if not FreshSoD_GetDBValue('buffVerifiedDisabled') then
       FreshSoD_SaveDBData('buffVerifiedDisabled', true)
+      if FreshSoD_BroadcastGuildVerificationStatusIfChanged then
+        FreshSoD_BroadcastGuildVerificationStatusIfChanged()
+      end
     end
     return
   end
 
   if buffState == 'active' and FreshSoD_GetDBValue('buffVerifiedDisabled') then
     FreshSoD_SaveDBData('buffValidationFailedAt', time())
+    if FreshSoD_BroadcastGuildVerificationStatusIfChanged then
+      FreshSoD_BroadcastGuildVerificationStatusIfChanged()
+    end
     return
   end
 
@@ -25,6 +31,9 @@ function FreshSoD_UpdateBuffVerification()
       and not FreshSoD_GetDBValue('buffVerifiedDisabled')
       and playerLevel >= BUFF_DISABLE_DEADLINE_LEVEL then
     FreshSoD_SaveDBData('buffValidationFailedAt', time())
+    if FreshSoD_BroadcastGuildVerificationStatusIfChanged then
+      FreshSoD_BroadcastGuildVerificationStatusIfChanged()
+    end
   end
 end
 
