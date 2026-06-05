@@ -3,6 +3,7 @@
 ## Version: 1.0.0
 ## Author: BonniesDad
 ## Notes: Addon to ensure a fresh SoD playthrough for Guzu's guild. 
+## Dependencies: BonniesUtilities
 ## SavedVariables: FRESH_SOD_DB
 
 FreshSoD.lua

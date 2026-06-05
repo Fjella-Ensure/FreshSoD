@@ -22,7 +22,7 @@ local function getDetectedOnHelperText(failedAt)
 end
 
 local function getVerificationChecks()
-  local playerTamperingValidationFailed = BonniesUtilities_GetNaughty() == true
+  local playerTamperingValidationFailed = BonniesUtilities_GetNaughtyBoolean() == true
 
   if FreshSoD_UpdateBuffVerification then
     FreshSoD_UpdateBuffVerification()
