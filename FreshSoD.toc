@@ -33,6 +33,10 @@ Functions/TradeRestriction/Utils/IsPlayerInGuildRoster.lua
 Functions/TradeRestriction/Utils/IsTradePartnerInMyGuild.lua
 Functions/TradeRestriction/Utils/PrintRestrictionMessage.lua
 Functions/TradeRestriction/Utils/RefreshGuildRoster.lua
+Functions/TradeRestriction/Utils/GetNonGuildMailIndices.lua
+Functions/TradeRestriction/Utils/ReturnNonGuildMail.lua
+Functions/TradeRestriction/MailRestrictionOverlay.lua
+Functions/TradeRestriction/MailRestriction.lua
 Functions/TradeRestriction/TradeRestriction.lua
 
 ## Verification
