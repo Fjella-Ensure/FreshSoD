@@ -5,12 +5,12 @@ function FreshSoD_IsPlayerInGuildRoster(playerName)
     return false
   end
 
-  local targetName = Ambiguate(playerName, 'short')
+  local targetName = string.lower(Ambiguate(playerName, 'short'))
   local numMembers = GetNumGuildMembers()
 
   for index = 1, numMembers do
     local name = GetGuildRosterInfo(index)
-    if name and Ambiguate(name, 'short') == targetName then
+    if name and string.lower(Ambiguate(name, 'short')) == targetName then
       return true
     end
   end

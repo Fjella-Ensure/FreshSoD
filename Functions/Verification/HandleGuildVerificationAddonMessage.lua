@@ -12,11 +12,12 @@ addonMessageFrame:SetScript('OnEvent', function(_, event, ...)
   if prefix ~= ADDON_PREFIX or channel ~= 'GUILD' or not sender then
     return
   end
-
   local isVerified = FreshSoD_ParseGuildVerificationMessage(message)
   if isVerified == nil then
+    
     return
   end
+
 
   if not FreshSoD_IsPlayerInGuildRoster(sender) then
     return
@@ -27,9 +28,7 @@ addonMessageFrame:SetScript('OnEvent', function(_, event, ...)
     return
   end
 
-  if not FreshSoD_SetGuildMemberVerificationStatus(guildName, sender, isVerified) then
-    return
-  end
+  FreshSoD_SetGuildMemberVerificationStatus(guildName, sender, isVerified)
 
   if FreshSoD_RefreshGuildBoardTabIfVisible then
     FreshSoD_RefreshGuildBoardTabIfVisible()

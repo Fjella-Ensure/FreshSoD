@@ -8,6 +8,14 @@ function FreshSoD_EnsureGuildVerificationDB()
   end
 end
 
+local function normalizeGuildPlayerName(playerName)
+  if not playerName then
+    return nil
+  end
+
+  return string.lower(Ambiguate(playerName, 'short'))
+end
+
 function FreshSoD_GetPlayerGuildName()
   if not IsInGuild() then
     return nil
@@ -28,9 +36,13 @@ function FreshSoD_GetGuildMemberVerificationStatus(guildName, playerName)
     return nil
   end
 
-  local shortName = Ambiguate(playerName, 'short')
+  local shortName = normalizeGuildPlayerName(playerName)
+  if not shortName then
+    return nil
+  end
+
   for storedName, status in pairs(guildData) do
-    if Ambiguate(storedName, 'short') == shortName then
+    if normalizeGuildPlayerName(storedName) == shortName then
       return status
     end
   end
@@ -39,18 +51,24 @@ function FreshSoD_GetGuildMemberVerificationStatus(guildName, playerName)
 end
 
 function FreshSoD_SetGuildMemberVerificationStatus(guildName, playerName, isVerified)
+  print('SetGuildMemberVerificationStatus', guildName, playerName, isVerified)
   FreshSoD_EnsureGuildVerificationDB()
 
   if not guildName or not playerName then
     return false
   end
 
-  local shortName = Ambiguate(playerName, 'short')
+  local shortName = normalizeGuildPlayerName(playerName)
+  if not shortName then
+    return false
+  end
+
   local guildData = FRESH_SOD_DB.guildVerificationStatus[guildName]
 
   if guildData then
     for storedName, status in pairs(guildData) do
-      if Ambiguate(storedName, 'short') == shortName then
+      print('SetGuildMemberVerificationStatus 3', storedName, status, isVerified)
+      if normalizeGuildPlayerName(storedName) == shortName then
         if status == isVerified then
           return false
         end
