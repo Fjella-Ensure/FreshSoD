@@ -51,7 +51,6 @@ function FreshSoD_GetGuildMemberVerificationStatus(guildName, playerName)
 end
 
 function FreshSoD_SetGuildMemberVerificationStatus(guildName, playerName, isVerified)
-  print('SetGuildMemberVerificationStatus', guildName, playerName, isVerified)
   FreshSoD_EnsureGuildVerificationDB()
 
   if not guildName or not playerName then
@@ -67,7 +66,6 @@ function FreshSoD_SetGuildMemberVerificationStatus(guildName, playerName, isVeri
 
   if guildData then
     for storedName, status in pairs(guildData) do
-      print('SetGuildMemberVerificationStatus 3', storedName, status, isVerified)
       if normalizeGuildPlayerName(storedName) == shortName then
         if status == isVerified then
           return false
