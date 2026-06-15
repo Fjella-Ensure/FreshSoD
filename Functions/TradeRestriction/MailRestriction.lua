@@ -35,6 +35,7 @@ mailRestrictionFrame:RegisterEvent('PLAYER_LOGIN')
 mailRestrictionFrame:RegisterEvent('MAIL_SHOW')
 mailRestrictionFrame:RegisterEvent('MAIL_INBOX_UPDATE')
 mailRestrictionFrame:RegisterEvent('MAIL_CLOSED')
+mailRestrictionFrame:RegisterEvent('GUILD_ROSTER_UPDATE')
 
 mailRestrictionFrame:SetScript('OnEvent', function(_, event)
   if event == 'PLAYER_LOGIN' then
@@ -48,7 +49,7 @@ mailRestrictionFrame:SetScript('OnEvent', function(_, event)
     return
   end
 
-  if event == 'MAIL_SHOW' then
+  if event == 'MAIL_SHOW' or event == 'GUILD_ROSTER_UPDATE' then
     scheduleMailRestrictionUpdate()
     return
   end

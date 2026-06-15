@@ -5,7 +5,7 @@ function FreshSoD_GetNonGuildMailIndices()
   local numItems = GetInboxNumItems()
 
   for inboxIndex = numItems, 1, -1 do
-    local _, _, sender, _, _, _, _, _, _, _, _, isGM = GetInboxHeaderInfo(inboxIndex)
+    local _, _, sender, _, _, _, _, _, _, _, _, _, isGM = GetInboxHeaderInfo(inboxIndex)
     if sender and not isGM and not FreshSoD_IsPlayerInGuildRoster(sender) then
       indices[#indices + 1] = inboxIndex
     end
