@@ -1,6 +1,7 @@
 local frame = CreateFrame('Frame')
 local nonGuildTradeCheckScheduled = false
-local guildTradeVerificationCheckScheduled = false
+local guildTradeVerificationTimer = nil
+local guildTradeVerificationRetryTimer = nil
 local tradeSessionGeneration = 0
 
 local TRADE_CONTENT_EVENTS = {
@@ -11,6 +12,11 @@ local TRADE_CONTENT_EVENTS = {
   'PLAYER_TRADE_MONEY',
   'TRADE_PLAYER_ITEM_CHANGED',
   'TRADE_TARGET_ITEM_CHANGED',
+}
+
+local TRADE_MONEY_EVENTS = {
+  TRADE_MONEY_CHANGED = true,
+  PLAYER_TRADE_MONEY = true,
 }
 
 for _, tradeEvent in ipairs(TRADE_CONTENT_EVENTS) do
@@ -45,9 +51,19 @@ local function runNonGuildTradeCheck()
   end
 end
 
-local function runGuildTradeVerificationCheck(generation)
-  guildTradeVerificationCheckScheduled = false
+local function cancelGuildTradeVerificationTimers()
+  if guildTradeVerificationTimer then
+    guildTradeVerificationTimer:Cancel()
+    guildTradeVerificationTimer = nil
+  end
 
+  if guildTradeVerificationRetryTimer then
+    guildTradeVerificationRetryTimer:Cancel()
+    guildTradeVerificationRetryTimer = nil
+  end
+end
+
+local function runGuildTradeVerificationCheck(generation)
   if generation ~= tradeSessionGeneration then
     return
   end
@@ -55,17 +71,49 @@ local function runGuildTradeVerificationCheck(generation)
   FreshSoD_UpdateGuildTradeVerification()
 end
 
-local function scheduleGuildTradeVerificationCheck()
-  if guildTradeVerificationCheckScheduled then
+local function scheduleGuildTradeVerificationRetry(generation)
+  if not C_Timer or not C_Timer.After then
     return
   end
-  guildTradeVerificationCheckScheduled = true
 
+  if guildTradeVerificationRetryTimer then
+    guildTradeVerificationRetryTimer:Cancel()
+  end
+
+  guildTradeVerificationRetryTimer = C_Timer.After(0.05, function()
+    guildTradeVerificationRetryTimer = nil
+
+    if generation ~= tradeSessionGeneration then
+      return
+    end
+
+    if type(BonniesUtilities_TradeRequiresGuildVerification) ~= 'function' then
+      return
+    end
+
+    if not BonniesUtilities_TradeRequiresGuildVerification() then
+      return
+    end
+
+    local session = FreshSoD_TradeVerificationSession
+    if session and not session.resolved then
+      return
+    end
+
+    FreshSoD_UpdateGuildTradeVerification()
+  end)
+end
+
+local function scheduleGuildTradeVerificationCheck()
   local generation = tradeSessionGeneration
 
+  cancelGuildTradeVerificationTimers()
+
   if C_Timer and C_Timer.After then
-    C_Timer.After(0, function()
+    guildTradeVerificationTimer = C_Timer.After(0, function()
+      guildTradeVerificationTimer = nil
       runGuildTradeVerificationCheck(generation)
+      scheduleGuildTradeVerificationRetry(generation)
     end)
   else
     runGuildTradeVerificationCheck(generation)
@@ -97,11 +145,16 @@ frame:SetScript('OnEvent', function(self, event, ...)
     or event == 'TRADE_PLAYER_ITEM_CHANGED'
     or event == 'TRADE_TARGET_ITEM_CHANGED' then
     scheduleNonGuildTradeCheck()
+
+    if TRADE_MONEY_EVENTS[event] then
+      runGuildTradeVerificationCheck(tradeSessionGeneration)
+    end
+
     scheduleGuildTradeVerificationCheck()
   elseif event == 'TRADE_CLOSED' then
     tradeSessionGeneration = tradeSessionGeneration + 1
     nonGuildTradeCheckScheduled = false
-    guildTradeVerificationCheckScheduled = false
+    cancelGuildTradeVerificationTimers()
     FreshSoD_ResetGuildTradeVerification()
     FreshSoD_ClearPartnerVerificationCache()
     FreshSoD_EndTradeVerification()
