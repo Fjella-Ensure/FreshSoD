@@ -77,8 +77,8 @@ function FreshSoD_BeginTradeVerification(playerName, onComplete)
   FreshSoD_SendTradeVerificationStatus(iAmVerified, playerName)
 
   local cached = FreshSoD_GetCachedPartnerVerification(playerName)
-  if cached ~= nil then
-    FreshSoD_PrintRestrictionMessage(playerName .. ' has ' .. (cached and 'passed' or 'failed') .. ' verification')
+  if cached == true then
+    FreshSoD_PrintRestrictionMessage(playerName .. ' has passed verification')
     FreshSoD_TradeVerificationSession.partnerVerified = cached
     FreshSoD_TryResolveTradeVerification()
   end

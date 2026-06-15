@@ -7,12 +7,16 @@ local ROW_HEIGHT = 13
 local ROWS_PER_PAGE = 15
 local SEARCH_MIN_CHARS = 3
 local STATUS_COLUMN_OFFSET = 180
+local ACTION_COLUMN_OFFSET = 238
+local REFRESH_BUTTON_SIZE = 16
 local PAGINATION_HEIGHT = 24
 local PAGINATION_BOTTOM_MARGIN = -2
 local PAGINATION_BUTTON_WIDTH = 64
 local PAGINATION_BUTTON_GAP = 6
 
 local SEARCH_HELPER_TEXT = 'Search members (3+ characters)'
+local REFRESH_ICON = 'Interface\\Buttons\\UI-RefreshButton'
+local REFRESH_TOOLTIP_TEXT = 'This will re-validate the player'
 
 local updateGuildBoardTabDisplay
 
@@ -42,6 +46,15 @@ local function getMemberVerificationDisplay(playerName, guildName)
   return STATUS_DISPLAY.unknown
 end
 
+local function getMemberStoredVerificationStatus(playerName, guildName)
+  local playerShortName = Ambiguate(UnitName('player'), 'short')
+  if Ambiguate(playerName, 'short') == playerShortName then
+    return FreshSoD_AmIVerified()
+  end
+
+  return FreshSoD_GetGuildMemberVerificationStatus(guildName, playerName)
+end
+
 local function getSearchText(content)
   local searchText = content.searchInput:GetText()
   if searchText then
@@ -65,6 +78,32 @@ local function filterMembers(members, searchText)
   end
 
   return filtered
+end
+
+local function createRefreshButton(parent)
+  local button = CreateFrame('Button', nil, parent)
+  button:SetSize(REFRESH_BUTTON_SIZE, REFRESH_BUTTON_SIZE)
+
+  local normal = button:CreateTexture(nil, 'ARTWORK')
+  normal:SetAllPoints()
+  normal:SetTexture(REFRESH_ICON)
+
+  local highlight = button:CreateTexture(nil, 'HIGHLIGHT')
+  highlight:SetAllPoints()
+  highlight:SetTexture(REFRESH_ICON)
+  highlight:SetBlendMode('ADD')
+  highlight:SetAlpha(0.4)
+
+  button:SetScript('OnEnter', function(self)
+    GameTooltip:SetOwner(self, 'ANCHOR_RIGHT')
+    GameTooltip:SetText(REFRESH_TOOLTIP_TEXT)
+    GameTooltip:Show()
+  end)
+  button:SetScript('OnLeave', function()
+    GameTooltip:Hide()
+  end)
+
+  return button
 end
 
 local function getPageMembers(filteredMembers, page)
@@ -124,6 +163,7 @@ local function updateGuildBoardLayout(content)
   for index = 1, ROWS_PER_PAGE do
     local nameRow = content.memberNameRows[index]
     local statusRow = content.memberStatusRows[index]
+    local resetButton = content.memberResetButtons and content.memberResetButtons[index]
 
     nameRow:ClearAllPoints()
     nameRow:SetPoint('TOPLEFT', content.tableContainer, 'TOPLEFT', 0, -((index - 1) * ROW_HEIGHT))
@@ -131,6 +171,12 @@ local function updateGuildBoardLayout(content)
 
     statusRow:ClearAllPoints()
     statusRow:SetPoint('LEFT', nameRow, 'LEFT', STATUS_COLUMN_OFFSET, 0)
+
+    if resetButton then
+      resetButton:ClearAllPoints()
+      resetButton:SetPoint('LEFT', nameRow, 'LEFT', ACTION_COLUMN_OFFSET, 0)
+      resetButton:SetSize(REFRESH_BUTTON_SIZE, REFRESH_BUTTON_SIZE)
+    end
   end
 end
 
@@ -161,9 +207,20 @@ local function ensureGuildBoardTabLayout(content)
 
   content.memberNameRows = {}
   content.memberStatusRows = {}
+  content.memberResetButtons = {}
   for index = 1, ROWS_PER_PAGE do
     content.memberNameRows[index] = content.tableContainer:CreateFontString(nil, 'OVERLAY', 'GameFontHighlight')
     content.memberStatusRows[index] = content.tableContainer:CreateFontString(nil, 'OVERLAY', 'GameFontHighlight')
+
+    local resetButton = createRefreshButton(content.tableContainer)
+    resetButton:Hide()
+    resetButton:SetScript('OnClick', function(self)
+      local targetName = self.memberName
+      if targetName and FreshSoD_SendGuildResetRequest(targetName) then
+        FreshSoD_PrintRestrictionMessage('Reset validation request sent to ' .. Ambiguate(targetName, 'short') .. '. They must be online to receive the request.')
+      end
+    end)
+    content.memberResetButtons[index] = resetButton
   end
 
   content.emptyLabel = content.tableContainer:CreateFontString(nil, 'OVERLAY', 'GameFontHighlight')
@@ -191,6 +248,9 @@ local function hideTableRows(content)
   for index = 1, ROWS_PER_PAGE do
     content.memberNameRows[index]:Hide()
     content.memberStatusRows[index]:Hide()
+    if content.memberResetButtons then
+      content.memberResetButtons[index]:Hide()
+    end
   end
 end
 
@@ -205,6 +265,7 @@ updateGuildBoardTabDisplay = function(content)
   local pageMembers, totalPages, currentPage = getPageMembers(filteredMembers, content.guildBoardCurrentPage or 1)
 
   content.guildBoardCurrentPage = currentPage
+  local showOfficerActions = FreshSoD_AmITopGuildRank()
 
   content.headerName:SetText('Member')
   content.headerName:SetTextColor(0.75, 0.75, 0.75)
@@ -257,9 +318,11 @@ updateGuildBoardTabDisplay = function(content)
       local memberName = pageMembers[index]
       local nameRow = content.memberNameRows[index]
       local statusRow = content.memberStatusRows[index]
+      local resetButton = content.memberResetButtons[index]
 
       if memberName then
         local status = getMemberVerificationDisplay(memberName, guildName)
+        local storedStatus = getMemberStoredVerificationStatus(memberName, guildName)
 
         nameRow:SetText(memberName)
         nameRow:SetTextColor(0.922, 0.871, 0.761)
@@ -268,9 +331,19 @@ updateGuildBoardTabDisplay = function(content)
         statusRow:SetText(status.text)
         statusRow:SetTextColor(status.r, status.g, status.b)
         statusRow:Show()
+
+        if showOfficerActions and storedStatus == false then
+          resetButton.memberName = memberName
+          resetButton:Show()
+        else
+          resetButton.memberName = nil
+          resetButton:Hide()
+        end
       else
         nameRow:Hide()
         statusRow:Hide()
+        resetButton.memberName = nil
+        resetButton:Hide()
       end
     end
   end

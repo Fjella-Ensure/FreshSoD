@@ -15,10 +15,31 @@ function FreshSoD_CachePartnerVerification(playerName, isVerified)
     return
   end
 
-  FreshSoD_partnerVerificationCache[playerName] = {
-    verified = isVerified,
-    at = time(),
-  }
+  for cachedName in pairs(FreshSoD_partnerVerificationCache) do
+    if FreshSoD_PlayerNamesMatch(cachedName, playerName) then
+      FreshSoD_partnerVerificationCache[cachedName] = nil
+    end
+  end
+
+  if isVerified then
+    FreshSoD_partnerVerificationCache[playerName] = {
+      verified = true,
+      at = time(),
+    }
+  end
+end
+
+function FreshSoD_ClearPartnerVerificationCache(playerName)
+  if not playerName then
+    FreshSoD_partnerVerificationCache = {}
+    return
+  end
+
+  for cachedName in pairs(FreshSoD_partnerVerificationCache) do
+    if FreshSoD_PlayerNamesMatch(cachedName, playerName) then
+      FreshSoD_partnerVerificationCache[cachedName] = nil
+    end
+  end
 end
 
 function FreshSoD_GetCachedPartnerVerification(playerName)

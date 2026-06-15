@@ -1,5 +1,7 @@
 local frame = CreateFrame('Frame')
 local nonGuildTradeCheckScheduled = false
+local guildTradeVerificationCheckScheduled = false
+local tradeSessionGeneration = 0
 
 local TRADE_CONTENT_EVENTS = {
   'TRADE_SHOW',
@@ -43,6 +45,33 @@ local function runNonGuildTradeCheck()
   end
 end
 
+local function runGuildTradeVerificationCheck(generation)
+  guildTradeVerificationCheckScheduled = false
+
+  if generation ~= tradeSessionGeneration then
+    return
+  end
+
+  FreshSoD_UpdateGuildTradeVerification()
+end
+
+local function scheduleGuildTradeVerificationCheck()
+  if guildTradeVerificationCheckScheduled then
+    return
+  end
+  guildTradeVerificationCheckScheduled = true
+
+  local generation = tradeSessionGeneration
+
+  if C_Timer and C_Timer.After then
+    C_Timer.After(0, function()
+      runGuildTradeVerificationCheck(generation)
+    end)
+  else
+    runGuildTradeVerificationCheck(generation)
+  end
+end
+
 local function scheduleNonGuildTradeCheck()
   if nonGuildTradeCheckScheduled then
     return
@@ -58,17 +87,8 @@ end
 
 frame:SetScript('OnEvent', function(self, event, ...)
   if event == 'TRADE_SHOW' then
-    local targetName = GetUnitName('npc', true)
-    if not targetName then
-      return
-    end
-
-    FreshSoD_CanPerformTradeWithPlayer(targetName, function(canTrade, message)
-      if not canTrade then
-        FreshSoD_CancelTradeWithMessage(message)
-      end
-    end)
-
+    tradeSessionGeneration = tradeSessionGeneration + 1
+    FreshSoD_ResetGuildTradeVerification()
     scheduleNonGuildTradeCheck()
   elseif event == 'TRADE_UPDATE'
     or event == 'TRADE_ACCEPT_UPDATE'
@@ -77,8 +97,13 @@ frame:SetScript('OnEvent', function(self, event, ...)
     or event == 'TRADE_PLAYER_ITEM_CHANGED'
     or event == 'TRADE_TARGET_ITEM_CHANGED' then
     scheduleNonGuildTradeCheck()
+    scheduleGuildTradeVerificationCheck()
   elseif event == 'TRADE_CLOSED' then
+    tradeSessionGeneration = tradeSessionGeneration + 1
     nonGuildTradeCheckScheduled = false
+    guildTradeVerificationCheckScheduled = false
+    FreshSoD_ResetGuildTradeVerification()
+    FreshSoD_ClearPartnerVerificationCache()
     FreshSoD_EndTradeVerification()
   elseif event == 'AUCTION_HOUSE_SHOW' then
     FreshSoD_CancelAuctionHouseWithMessage('Auction House blocked')

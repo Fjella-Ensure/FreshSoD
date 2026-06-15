@@ -11,17 +11,19 @@ function FreshSoD_BroadcastGuildVerificationStatusIfChanged()
   end
 
   local isVerified = FreshSoD_AmIVerified()
+  local guildName = FreshSoD_GetPlayerGuildName()
+
+  if guildName then
+    FreshSoD_SetLocalCharacterVerificationStatus(UnitName('player'), isVerified, guildName)
+    FreshSoD_SetGuildMemberVerificationStatus(guildName, UnitName('player'), isVerified)
+  end
+
   if lastBroadcastStatus == isVerified then
     return
   end
 
   FreshSoD_SendGuildVerificationStatus(isVerified)
   lastBroadcastStatus = isVerified
-
-  local guildName = FreshSoD_GetPlayerGuildName()
-  if guildName then
-    FreshSoD_SetGuildMemberVerificationStatus(guildName, UnitName('player'), isVerified)
-  end
 
   if FreshSoD_RefreshGuildBoardTabIfVisible then
     FreshSoD_RefreshGuildBoardTabIfVisible()

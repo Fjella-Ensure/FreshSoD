@@ -1,6 +1,6 @@
 ## Interface: 11508
 ## Title: SoD Guild Found
-## Version: 1.0.2
+## Version: 1.0.3
 ## Author: BonniesDad
 ## Notes: Addon to ensure a fresh SoD playthrough for guild found. 
 ## Dependencies: BonniesUtilities
@@ -18,6 +18,7 @@ Libs/LibDBIcon-1.0/LibDBIcon-1.0.lua
 
 ## Database
 Functions/DB/GuildVerificationStatus.lua
+Functions/DB/LocalCharacterVerification.lua
 Functions/DB/InitializeDBData.lua
 Functions/DB/GetDBValue.lua
 Functions/DB/SaveDBData.lua
@@ -35,19 +36,24 @@ Functions/TradeRestriction/Utils/PrintRestrictionMessage.lua
 Functions/TradeRestriction/Utils/RefreshGuildRoster.lua
 Functions/TradeRestriction/Utils/GetNonGuildMailIndices.lua
 Functions/TradeRestriction/Utils/ReturnNonGuildMail.lua
+Functions/TradeRestriction/Utils/CanSendMailToRecipient.lua
 Functions/TradeRestriction/MailRestrictionOverlay.lua
 Functions/TradeRestriction/MailRestriction.lua
+Functions/TradeRestriction/MailSendRestriction.lua
 Functions/TradeRestriction/TradeRestriction.lua
 
 ## Verification
 Functions/Verification/RegisterTradeVerificationPrefix.lua
 Functions/Verification/ParseTradeVerificationMessage.lua
 Functions/Verification/ParseGuildVerificationMessage.lua
+Functions/Verification/ParseGuildResetMessage.lua
 Functions/Verification/SendTradeVerificationStatus.lua
+Functions/Verification/SendGuildResetRequest.lua
 Functions/Verification/SendGuildVerificationStatus.lua
 Functions/Verification/TradeVerificationCache.lua
 Functions/Verification/HandleTradeVerificationAddonMessage.lua
 Functions/Verification/HandleGuildVerificationAddonMessage.lua
+Functions/Verification/HandleGuildResetAddonMessage.lua
 Functions/Verification/TradeVerificationOverlay.lua
 Functions/Verification/TradeVerificationSession.lua
 Functions/Verification/AmIVerified.lua
@@ -57,6 +63,7 @@ Functions/Verification/SendTamperingHistory.lua
 
 ## Guild Board
 Functions/GuildBoard/GetGuildMemberNames.lua
+Functions/GuildBoard/IsTopGuildRank.lua
 
 ## View
 View/Menu/Menu.lua
