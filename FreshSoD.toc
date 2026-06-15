@@ -53,8 +53,6 @@ Functions/Verification/TradeVerificationSession.lua
 Functions/Verification/AmIVerified.lua
 Functions/Verification/BroadcastGuildVerificationStatus.lua
 Functions/Verification/CanPerformTradeWithPlayer.lua
-Functions/Verification/IsBuffActive.lua
-Functions/Verification/BuffVerificationTracker.lua
 Functions/Verification/SendTamperingHistory.lua
 
 ## Guild Board

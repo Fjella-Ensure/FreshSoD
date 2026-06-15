@@ -9,8 +9,6 @@ function FreshSoD_InitializeDBData()
 
   local defaultSettings = {
     minimapButton = { hide = false },
-    buffVerifiedDisabled = false,
-    buffValidationFailedAt = nil
   }
 
   local characterGUID = UnitGUID('player')

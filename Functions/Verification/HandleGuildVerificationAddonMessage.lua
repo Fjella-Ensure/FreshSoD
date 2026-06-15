@@ -4,7 +4,6 @@ local addonMessageFrame = CreateFrame('Frame')
 addonMessageFrame:RegisterEvent('CHAT_MSG_ADDON')
 
 addonMessageFrame:SetScript('OnEvent', function(_, event, ...)
-  print('HandleGuildVerificationAddonMessage', event, ...)
   if event ~= 'CHAT_MSG_ADDON' then
     return
   end

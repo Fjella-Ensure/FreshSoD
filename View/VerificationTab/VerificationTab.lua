@@ -24,41 +24,13 @@ end
 local function getVerificationChecks()
   local playerTamperingValidationFailed = BonniesUtilities_GetNaughtyBoolean() == true
 
-  if FreshSoD_UpdateBuffVerification then
-    FreshSoD_UpdateBuffVerification()
-  end
-
-  local buffValidationFailedAt = FreshSoD_GetDBValue('buffValidationFailedAt')
-  local buffValidationFailed = buffValidationFailedAt ~= nil
-
-  local buffVerifiedDisabled = FreshSoD_GetDBValue('buffVerifiedDisabled') == true
-  local buffVerificationPending = not buffValidationFailed and not buffVerifiedDisabled
-  local buffVerificationPassed = not buffValidationFailed and buffVerifiedDisabled
-
   return {
     {
       passed = playerTamperingValidationFailed == false,
       passMessage = 'No tampering detected',
       failMessage = 'Tampering detected',
       helperTexts = nil,
-    },
-    {
-      passed = buffVerificationPassed,
-      pending = buffVerificationPending,
-      passMessage = "Discoverer's Delight buff is disabled",
-      pendingMessage = "Discoverer's Delight is active",
-      failMessage = buffValidationFailed
-        and "Discoverer's Delight was re-enabled"
-        or "Discoverer's Delight buff is active",
-      helperTexts = buffVerificationPending
-        and {
-          'Major city inkeepers can disable the buff',
-          'This must be turned off by level 10',
-        }
-        or (buffValidationFailed
-          and { getDetectedOnHelperText(buffValidationFailedAt) }
-          or nil),
-    },
+    }
   }
 end
 
