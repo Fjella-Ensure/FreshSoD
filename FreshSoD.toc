@@ -1,8 +1,8 @@
 ## Interface: 11508
-## Title: Guzu's SoD
-## Version: 1.0.1
+## Title: SoD Guild Found
+## Version: 1.0.2
 ## Author: BonniesDad
-## Notes: Addon to ensure a fresh SoD playthrough for Guzu's guild. 
+## Notes: Addon to ensure a fresh SoD playthrough for guild found. 
 ## Dependencies: BonniesUtilities
 ## SavedVariables: FRESH_SOD_DB
 
