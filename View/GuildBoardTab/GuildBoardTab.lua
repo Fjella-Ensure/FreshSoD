@@ -332,7 +332,9 @@ updateGuildBoardTabDisplay = function(content)
         statusRow:SetTextColor(status.r, status.g, status.b)
         statusRow:Show()
 
-        if showOfficerActions and storedStatus == false then
+        if showOfficerActions
+          and storedStatus == false
+          and Ambiguate(memberName, 'short') ~= Ambiguate(UnitName('player'), 'short') then
           resetButton.memberName = memberName
           resetButton:Show()
         else
