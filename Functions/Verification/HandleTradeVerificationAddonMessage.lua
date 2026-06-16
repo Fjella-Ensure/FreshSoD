@@ -14,10 +14,10 @@ addonMessageFrame:SetScript('OnEvent', function(_, event, ...)
     return
   end
 
-  local isVerified = FreshSoD_ParseTradeVerificationMessage(message)
+  local isVerified, guildName = FreshSoD_ParseTradeVerificationMessage(message)
   if isVerified == nil then
     return
   end
 
-  FreshSoD_OnTradeVerificationMessageReceived(sender, isVerified)
+  FreshSoD_OnTradeVerificationMessageReceived(sender, isVerified, guildName)
 end)
