@@ -1,6 +1,20 @@
 local sendGuardInstalled = false
 local canSendHookInstalled = false
 
+local function hookSendMailFrame()
+  if not SendMailFrame or SendMailFrame.freshSoDSendMailHooked then
+    return
+  end
+
+  SendMailFrame.freshSoDSendMailHooked = true
+  SendMailFrame:HookScript('OnShow', function()
+    FreshSoD_ShowSendMailRestrictionOverlay()
+  end)
+  SendMailFrame:HookScript('OnHide', function()
+    FreshSoD_HideSendMailRestrictionOverlay()
+  end)
+end
+
 local function getRecipient()
   if SendMailNameEditBox then
     return SendMailNameEditBox:GetText()
@@ -95,15 +109,24 @@ end
 local mailSendRestrictionFrame = CreateFrame('Frame')
 mailSendRestrictionFrame:RegisterEvent('PLAYER_LOGIN')
 mailSendRestrictionFrame:RegisterEvent('MAIL_SHOW')
+mailSendRestrictionFrame:RegisterEvent('MAIL_CLOSED')
 mailSendRestrictionFrame:RegisterEvent('MAIL_SEND_INFO_UPDATE')
 mailSendRestrictionFrame:RegisterEvent('GUILD_ROSTER_UPDATE')
 
 mailSendRestrictionFrame:SetScript('OnEvent', function(_, event)
   if event == 'PLAYER_LOGIN' or event == 'MAIL_SHOW' then
+    hookSendMailFrame()
     installSendGuard()
     updateSendMailButtonState()
     return
   end
 
+  if event == 'MAIL_CLOSED' then
+    FreshSoD_HideSendMailRestrictionOverlay()
+    return
+  end
+
   updateSendMailButtonState()
 end)
+
+hookSendMailFrame()

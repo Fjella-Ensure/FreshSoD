@@ -38,6 +38,7 @@ Functions/TradeRestriction/Utils/GetNonGuildMailIndices.lua
 Functions/TradeRestriction/Utils/ReturnNonGuildMail.lua
 Functions/TradeRestriction/Utils/CanSendMailToRecipient.lua
 Functions/TradeRestriction/MailRestrictionOverlay.lua
+Functions/TradeRestriction/SendMailRestrictionOverlay.lua
 Functions/TradeRestriction/MailRestriction.lua
 Functions/TradeRestriction/MailSendRestriction.lua
 Functions/TradeRestriction/TradeRestriction.lua
