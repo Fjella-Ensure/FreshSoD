@@ -7,6 +7,7 @@
 
 **BUG FIXES:**
 • Unable to return non returnable items resulting in "mail locked" scenario
+• Allow returned mail to be received
 
 ## 1.0.5 (2026-06-16)
 
