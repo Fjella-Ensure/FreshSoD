@@ -1,6 +1,6 @@
 ## Interface: 11508
 ## Title: SoD Guild Found
-## Version: 1.0.4
+## Version: 1.0.5
 ## Author: BonniesDad
 ## Notes: Addon to ensure a fresh SoD playthrough for guild found. 
 ## Dependencies: BonniesUtilities
@@ -63,6 +63,10 @@ Functions/Verification/IsPlayerValidatedInWhitelistedGuild.lua
 Functions/Verification/BroadcastGuildVerificationStatus.lua
 Functions/Verification/CanPerformTradeWithPlayer.lua
 Functions/Verification/SendTamperingHistory.lua
+
+## Level Brackets
+Functions/LevelBracket/LevelBracketModal.lua
+Functions/LevelBracket/LevelBracket.lua
 
 ## Guild Board
 Functions/GuildBoard/GetGuildMemberNames.lua

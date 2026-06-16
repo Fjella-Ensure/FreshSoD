@@ -1,5 +1,10 @@
 # Patch Notes
 
+## 1.0.5 (2026-06-16)
+
+**FEATURES:**
+• Level cap warning on level up
+
 ## 1.0.4 (2026-06-16)
 
 **FEATURES:**
