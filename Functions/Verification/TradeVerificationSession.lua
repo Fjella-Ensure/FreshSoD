@@ -118,14 +118,6 @@ function FreshSoD_BeginTradeVerification(playerName, onComplete)
   FreshSoD_PrintRestrictionMessage(iAmVerified and 'I have passed verification' or 'I have failed verification')
   FreshSoD_SendTradeVerificationStatus(iAmVerified, playerName)
 
-  local cachedVerified, cachedGuildName = FreshSoD_GetCachedPartnerVerification(playerName)
-  if cachedVerified then
-    FreshSoD_PrintRestrictionMessage(playerName .. ' has passed verification')
-    FreshSoD_TradeVerificationSession.partnerVerified = true
-    FreshSoD_TradeVerificationSession.partnerGuildName = cachedGuildName
-    FreshSoD_TryResolveTradeVerification()
-  end
-
   if C_Timer and C_Timer.NewTimer then
     FreshSoD_tradeVerificationTimeout = C_Timer.NewTimer(VERIFICATION_TIMEOUT_SECONDS, function()
       FreshSoD_TryResolveTradeVerification(true)

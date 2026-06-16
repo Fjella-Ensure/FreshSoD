@@ -1,8 +1,3 @@
-local WHITELISTED_GUILDS = {
-  'shockstate',
-  'Guild Found',
-}
-
 local function normalizeGuildName(guildName)
   if not guildName then
     return nil
@@ -17,7 +12,7 @@ function FreshSoD_IsWhitelistedGuild(guildName)
   end
 
   local normalizedGuildName = normalizeGuildName(guildName)
-  for _, whitelistedGuild in ipairs(WHITELISTED_GUILDS) do
+  for _, whitelistedGuild in ipairs(BONNIES_UTILITIES_GUILD_FOUND_WHITELISTED_GUILDS) do
     if normalizeGuildName(whitelistedGuild) == normalizedGuildName then
       return true
     end
