@@ -9,9 +9,7 @@ end
 local function isStoredInWhitelistedGuild(playerName)
   FreshSoD_EnsureLocalCharacterVerificationDB()
 
-  print(playerName)
   local theirGuild = GetGuildInfo(playerName)
-  print(theirGuild)
 
   local shortName = string.lower(Ambiguate(playerName, 'short'))
   local entry = FRESH_SOD_DB.localCharacterVerification[shortName]
