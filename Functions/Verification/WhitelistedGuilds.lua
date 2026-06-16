@@ -1,6 +1,6 @@
 local WHITELISTED_GUILDS = {
   'shockstate',
-  'otherguild',
+  'Guild Found',
 }
 
 local function normalizeGuildName(guildName)

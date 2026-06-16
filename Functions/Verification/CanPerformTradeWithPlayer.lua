@@ -8,6 +8,18 @@ function FreshSoD_HasPassedGuildTradeVerification()
   return guildTradeVerificationPassed
 end
 
+function FreshSoD_ShouldDeferNonGuildTradeCheck()
+  if FreshSoD_HasPassedGuildTradeVerification() then
+    return false
+  end
+
+  if type(BonniesUtilities_TradeRequiresGuildVerification) ~= 'function' then
+    return false
+  end
+
+  return BonniesUtilities_TradeRequiresGuildVerification()
+end
+
 function FreshSoD_UpdateGuildTradeVerification()
   if type(BonniesUtilities_TradeRequiresGuildVerification) ~= 'function' then
     return
