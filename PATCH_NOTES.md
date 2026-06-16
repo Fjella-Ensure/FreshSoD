@@ -1,7 +1,7 @@
 # Patch Notes
 
 ## 1.0.6 (2026-06-17)
-
+b
 **FEATURES:**
 • Send Mail warning message
 
