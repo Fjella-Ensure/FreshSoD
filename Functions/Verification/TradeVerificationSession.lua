@@ -16,14 +16,36 @@ function FreshSoD_EndTradeVerification()
   FreshSoD_ClearTradeVerificationSession()
 end
 
-local function getTradeBlockedMessage(session)
+local function getSelfBlockedMessage()
   if not FreshSoD_AmIVerified() then
     return 'Trade blocked - you are not verified.'
   end
-  if session.partnerVerified == false then
-    return 'Trade with ' .. session.targetName .. ' blocked - partner not verified.'
+
+  if not FreshSoD_GetPlayerGuildName() then
+    return 'Trade blocked - you are not in a guild.'
   end
-  return 'Trade with ' .. session.targetName .. ' blocked - verification failed.'
+
+  return 'Trade blocked - verification failed.'
+end
+
+local function getPartnerBlockedMessage(targetName, partnerVerified, partnerGuildName)
+  if partnerVerified == false then
+    return 'Trade with ' .. targetName .. ' blocked - partner not verified.'
+  end
+
+  if FreshSoD_IsPlayerInGuildRoster(targetName) then
+    return 'Trade with ' .. targetName .. ' blocked - verification failed.'
+  end
+
+  if not partnerGuildName then
+    return 'Trade with ' .. targetName .. ' blocked - partner is not in a guild.'
+  end
+
+  if not FreshSoD_IsWhitelistedGuild(partnerGuildName) then
+    return 'Trade with ' .. targetName .. ' blocked - partner not in a whitelisted guild.'
+  end
+
+  return 'Trade with ' .. targetName .. ' blocked - verification failed.'
 end
 
 function FreshSoD_TryResolveTradeVerification(isTimeout)
@@ -47,8 +69,21 @@ function FreshSoD_TryResolveTradeVerification(isTimeout)
 
   session.resolved = true
 
-  local canTrade = FreshSoD_AmIVerified() and session.partnerVerified
-  local message = canTrade and nil or getTradeBlockedMessage(session)
+  local partnerPasses = FreshSoD_PassesLiveTradeVerification(
+    session.partnerVerified,
+    session.partnerGuildName,
+    session.targetName
+  )
+  local canTrade = FreshSoD_AmIEligibleForWhitelistedTrade() and partnerPasses
+  local message
+  if not canTrade then
+    if not FreshSoD_AmIEligibleForWhitelistedTrade() then
+      message = getSelfBlockedMessage()
+    else
+      message = getPartnerBlockedMessage(session.targetName, session.partnerVerified, session.partnerGuildName)
+    end
+  end
+
   local onComplete = session.onComplete
 
   FreshSoD_ClearTradeVerificationSession()
@@ -63,25 +98,25 @@ end
 
 function FreshSoD_BeginTradeVerification(playerName, onComplete)
   FreshSoD_ClearTradeVerificationSession()
+
+  if not FreshSoD_AmIEligibleForWhitelistedTrade() then
+    onComplete(false, getSelfBlockedMessage())
+    return
+  end
+
   FreshSoD_ShowTradeVerificationOverlay()
 
   FreshSoD_TradeVerificationSession = {
     targetName = playerName,
     onComplete = onComplete,
     partnerVerified = nil,
+    partnerGuildName = nil,
     resolved = false,
   }
 
   local iAmVerified = FreshSoD_AmIVerified()
   FreshSoD_PrintRestrictionMessage(iAmVerified and 'I have passed verification' or 'I have failed verification')
   FreshSoD_SendTradeVerificationStatus(iAmVerified, playerName)
-
-  local cached = FreshSoD_GetCachedPartnerVerification(playerName)
-  if cached == true then
-    FreshSoD_PrintRestrictionMessage(playerName .. ' has passed verification')
-    FreshSoD_TradeVerificationSession.partnerVerified = cached
-    FreshSoD_TryResolveTradeVerification()
-  end
 
   if C_Timer and C_Timer.NewTimer then
     FreshSoD_tradeVerificationTimeout = C_Timer.NewTimer(VERIFICATION_TIMEOUT_SECONDS, function()
@@ -90,8 +125,18 @@ function FreshSoD_BeginTradeVerification(playerName, onComplete)
   end
 end
 
-function FreshSoD_OnTradeVerificationMessageReceived(sender, isVerified)
-  FreshSoD_CachePartnerVerification(sender, isVerified)
+function FreshSoD_OnTradeVerificationMessageReceived(sender, isVerified, guildName)
+  local partnerPasses = FreshSoD_PassesLiveTradeVerification(isVerified, guildName, sender)
+  FreshSoD_CachePartnerVerification(sender, partnerPasses, guildName)
+
+  if partnerPasses and guildName and FreshSoD_IsWhitelistedGuild(guildName) then
+    FreshSoD_SetGuildMemberVerificationStatus(guildName, sender, true)
+  elseif partnerPasses and FreshSoD_IsPlayerInGuildRoster(sender) then
+    local myGuildName = FreshSoD_GetPlayerGuildName()
+    if myGuildName then
+      FreshSoD_SetGuildMemberVerificationStatus(myGuildName, sender, true)
+    end
+  end
 
   local session = FreshSoD_TradeVerificationSession
   if not session or session.resolved or not FreshSoD_PlayerNamesMatch(sender, session.targetName) then
@@ -99,6 +144,19 @@ function FreshSoD_OnTradeVerificationMessageReceived(sender, isVerified)
   end
 
   session.partnerVerified = isVerified
-  FreshSoD_PrintRestrictionMessage(session.targetName .. ' has ' .. (isVerified and 'passed' or 'failed') .. ' verification')
+  session.partnerGuildName = guildName
+
+  if partnerPasses then
+    FreshSoD_PrintRestrictionMessage(session.targetName .. ' has passed verification')
+  elseif isVerified ~= true then
+    FreshSoD_PrintRestrictionMessage(session.targetName .. ' has failed verification')
+  elseif FreshSoD_IsPlayerInGuildRoster(sender) then
+    FreshSoD_PrintRestrictionMessage(session.targetName .. ' has failed verification')
+  elseif not guildName then
+    FreshSoD_PrintRestrictionMessage(session.targetName .. ' is not in a guild')
+  else
+    FreshSoD_PrintRestrictionMessage(session.targetName .. ' is not in a whitelisted guild')
+  end
+
   FreshSoD_TryResolveTradeVerification()
 end

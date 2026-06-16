@@ -10,7 +10,7 @@ function FreshSoD_PlayerNamesMatch(nameA, nameB)
   return Ambiguate(nameA, 'short') == Ambiguate(nameB, 'short')
 end
 
-function FreshSoD_CachePartnerVerification(playerName, isVerified)
+function FreshSoD_CachePartnerVerification(playerName, passesVerification, guildName)
   if not playerName then
     return
   end
@@ -21,9 +21,10 @@ function FreshSoD_CachePartnerVerification(playerName, isVerified)
     end
   end
 
-  if isVerified then
+  if passesVerification then
     FreshSoD_partnerVerificationCache[playerName] = {
       verified = true,
+      guildName = guildName,
       at = time(),
     }
   end
@@ -50,7 +51,7 @@ function FreshSoD_GetCachedPartnerVerification(playerName)
         return nil
       end
 
-      return entry.verified
+      return entry.verified, entry.guildName
     end
   end
 

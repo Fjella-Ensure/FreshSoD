@@ -4,12 +4,23 @@ function FreshSoD_ResetGuildTradeVerification()
   guildTradeVerificationPassed = false
 end
 
-function FreshSoD_UpdateGuildTradeVerification()
-  if not BonniesUtilities_IsTradePartnerInMyGuild() then
-    FreshSoD_EndTradeVerification()
-    return
+function FreshSoD_HasPassedGuildTradeVerification()
+  return guildTradeVerificationPassed
+end
+
+function FreshSoD_ShouldDeferNonGuildTradeCheck()
+  if FreshSoD_HasPassedGuildTradeVerification() then
+    return false
   end
 
+  if type(BonniesUtilities_TradeRequiresGuildVerification) ~= 'function' then
+    return false
+  end
+
+  return BonniesUtilities_TradeRequiresGuildVerification()
+end
+
+function FreshSoD_UpdateGuildTradeVerification()
   if type(BonniesUtilities_TradeRequiresGuildVerification) ~= 'function' then
     return
   end
@@ -35,7 +46,11 @@ function FreshSoD_UpdateGuildTradeVerification()
     return
   end
 
-  FreshSoD_PrintRestrictionMessage(partnerName .. ' is in my Guild.' .. ' Starting verification...')
+  if BonniesUtilities_IsTradePartnerInMyGuild() then
+    FreshSoD_PrintRestrictionMessage(partnerName .. ' is in my Guild. Starting verification...')
+  else
+    FreshSoD_PrintRestrictionMessage('Starting verification with ' .. partnerName .. '...')
+  end
 
   FreshSoD_BeginTradeVerification(partnerName, function(canTrade, message)
     if canTrade then

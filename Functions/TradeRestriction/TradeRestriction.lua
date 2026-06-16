@@ -43,6 +43,12 @@ end
 
 local function runNonGuildTradeCheck()
   nonGuildTradeCheckScheduled = false
+  if FreshSoD_HasPassedGuildTradeVerification and FreshSoD_HasPassedGuildTradeVerification() then
+    return
+  end
+  if FreshSoD_ShouldDeferNonGuildTradeCheck and FreshSoD_ShouldDeferNonGuildTradeCheck() then
+    return
+  end
   if type(BonniesUtilities_TradeViolatesNonGuildRestrictions) ~= 'function' then
     return
   end
