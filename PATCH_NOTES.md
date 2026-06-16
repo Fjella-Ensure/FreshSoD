@@ -1,5 +1,10 @@
 # Patch Notes
 
+## 1.0.4 (2026-06-16)
+
+**FEATURES:**
+• Trade with whitelisted guilds
+
 ## 1.0.3 (2026-06-15)
 
 **FEATURES:**
