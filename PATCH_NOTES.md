@@ -5,10 +5,15 @@
 **FEATURES:**
 • Level cap warning on level up
 
+**BUG FIXES:**
+• Able to put items in the enchanting ("will not be traded") trade slot with non-valid players
+
+
 ## 1.0.4 (2026-06-16)
 
 **FEATURES:**
 • Trade with whitelisted guilds
+
 
 ## 1.0.3 (2026-06-15)
 
