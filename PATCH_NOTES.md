@@ -1,5 +1,13 @@
 # Patch Notes
 
+## 1.0.6 (2026-06-17)
+
+**FEATURES:**
+• Send Mail warning message
+
+**BUG FIXES:**
+• Unable to return non returnable items resulting in "mail locked" scenario
+
 ## 1.0.5 (2026-06-16)
 
 **FEATURES:**
