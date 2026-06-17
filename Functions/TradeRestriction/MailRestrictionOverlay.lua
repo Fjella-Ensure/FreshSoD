@@ -6,6 +6,20 @@ local BUTTON_BOTTOM_MARGIN = 20
 local BUTTON_GAP = 12
 local MESSAGE_TEXT = 'Mail from non-guildies must be returned before you can continue'
 
+local function getRemainingMailCount()
+  if type(FreshSoD_GetNonGuildMailIndices) ~= 'function' then
+    return 0
+  end
+
+  return #FreshSoD_GetNonGuildMailIndices()
+end
+
+local function getOverlayMessage()
+  local remaining = getRemainingMailCount()
+  local noun = remaining == 1 and 'mail' or 'mails'
+  return MESSAGE_TEXT .. '\n\nRemaining to return: ' .. remaining .. ' ' .. noun
+end
+
 local function closeMailbox()
   if CloseMail then
     CloseMail()
@@ -40,7 +54,7 @@ function FreshSoD_ShowMailRestrictionOverlay()
     overlay.messageText:SetWordWrap(true)
     overlay.messageText:SetJustifyH('CENTER')
     overlay.messageText:SetJustifyV('MIDDLE')
-    overlay.messageText:SetText(MESSAGE_TEXT)
+    overlay.messageText:SetText(getOverlayMessage())
 
     overlay.cancelButton = CreateFrame('Button', nil, overlay, 'UIPanelButtonTemplate')
     overlay.cancelButton:SetSize(BUTTON_WIDTH, BUTTON_HEIGHT)
@@ -59,6 +73,7 @@ function FreshSoD_ShowMailRestrictionOverlay()
   end
 
   overlay.messageText:SetWidth(MailFrame:GetWidth() - 48)
+  overlay.messageText:SetText(getOverlayMessage())
 
   overlay.cancelButton:ClearAllPoints()
   overlay.cancelButton:SetPoint('BOTTOMLEFT', overlay, 'BOTTOMLEFT', BUTTON_BOTTOM_MARGIN, BUTTON_BOTTOM_MARGIN)

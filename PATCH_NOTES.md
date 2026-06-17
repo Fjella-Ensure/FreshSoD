@@ -4,6 +4,7 @@
 b
 **FEATURES:**
 • Send Mail warning message
+• Show remaining mail to return count
 
 **BUG FIXES:**
 • Unable to return non returnable items resulting in "mail locked" scenario

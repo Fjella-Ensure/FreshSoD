@@ -5,7 +5,7 @@ local WIDTH_OFFSET = 50
 local HEIGHT_OFFSET = 110
 local POSITION_OFFSET_X = -25
 local POSITION_OFFSET_Y = 35
-local SENTENCE_GAP = '\n\n'
+local SENTENCE_GAP = '\n\n\n'
 local BUTTON_WIDTH = 110
 local BUTTON_HEIGHT = 24
 local BUTTON_BOTTOM_MARGIN = 16
@@ -13,8 +13,7 @@ local TITLE_TEXT = 'Sending mail in guild found'
 local TITLE_COLOR = { 1, 1, 0 }
 local TITLE_BODY_GAP = 22
 local MESSAGE_LINES = {
-  'You can only send mail to your own valid guild members.',
-  'For the addon to know if a player is valid, you must witness them log in.',
+  'You can only send mail to your own guild members.',
   'You cannot send mail to players in a sister guilds.  You must trade with them in person.',
   'Sending just gold to a sister guild member will result in the gold being deleted.',
   'Sending items to a sister guild member will result in the items being returned.',
