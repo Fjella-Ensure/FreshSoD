@@ -38,5 +38,10 @@ addonMessageFrame:SetScript('OnEvent', function(_, event, ...)
     return
   end
 
+  local localPlayerName = UnitName('player')
+  if localPlayerName and normalizePlayerName(sender) == normalizePlayerName(localPlayerName) then
+    return
+  end
+
   FreshSoD_ShowDeathTaxAnnouncement(playerName, taxCopper)
 end)

@@ -1,5 +1,12 @@
 # Patch Notes
 
+## 1.0.8 (2026-06-18)
+
+**FEATURES:**
+• Death tax display update 
+• Death tax soundbyte trigger
+• Improve wording on level cap message
+
 ## 1.0.7 (2026-06-17)
 
 **FEATURES:**

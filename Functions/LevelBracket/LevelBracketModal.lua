@@ -22,7 +22,8 @@ local SCHEDULE_DATE_COLOR = { 0.55, 0.78, 0.55 }
 local BULLET_COLOR = { 0.65, 0.6, 0.5 }
 
 local TITLE_TEXT = 'You must now turn off your XP until the next phase begins'
-local SUBTITLE_TEXT = 'Speak to Grendag Brightbeard to disable XP gain'
+local SUBTITLE_TEXT = 'Speak to Grendag Brightbeard in Orgrimmar to disable XP gain'
+local SUBSUBTITLE_TEXT = "Near the entrance to 'The Drag', coordinates: 49x, 58y"
 local SECTION_TITLE_TEXT = 'Phase Schedule'
 
 local SCHEDULE_ENTRIES = {
@@ -169,8 +170,18 @@ function FreshSoD_ShowLevelBracketModal(bracketLevel)
     modal.subtitleText:SetText(SUBTITLE_TEXT)
     setTextColor(modal.subtitleText, SUBTITLE_COLOR)
 
+    modal.subsubtitleText = modal:CreateFontString(nil, 'OVERLAY', 'GameFontHighlightSmall')
+    modal.subsubtitleText:SetPoint('TOP', modal.subtitleText, 'BOTTOM', 0, -6)
+    modal.subsubtitleText:SetPoint('LEFT', modal, 'LEFT', CONTENT_HORIZONTAL_INSET, 0)
+    modal.subsubtitleText:SetPoint('RIGHT', modal, 'RIGHT', -CONTENT_HORIZONTAL_INSET, 0)
+    modal.subsubtitleText:SetWordWrap(true)
+    modal.subsubtitleText:SetJustifyH('CENTER')
+    modal.subsubtitleText:SetSpacing(2)
+    modal.subsubtitleText:SetText(SUBSUBTITLE_TEXT)
+    setTextColor(modal.subsubtitleText, SUBTITLE_COLOR)
+
     modal.sectionTitle = modal:CreateFontString(nil, 'OVERLAY', 'GameFontHighlight')
-    modal.sectionTitle:SetPoint('TOP', modal.subtitleText, 'BOTTOM', 0, -18)
+    modal.sectionTitle:SetPoint('TOP', modal.subsubtitleText, 'BOTTOM', 0, -18)
     modal.sectionTitle:SetPoint('LEFT', modal, 'LEFT', CONTENT_HORIZONTAL_INSET, 0)
     modal.sectionTitle:SetText(SECTION_TITLE_TEXT)
     setTextColor(modal.sectionTitle, SECTION_COLOR)
