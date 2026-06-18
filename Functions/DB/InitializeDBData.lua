@@ -10,6 +10,7 @@ function FreshSoD_InitializeDBData()
   local defaultSettings = {
     minimapButton = { hide = false },
     levelBracketAcknowledged = {},
+    deathTaxOwedCopper = 0,
   }
 
   local characterGUID = UnitGUID('player')

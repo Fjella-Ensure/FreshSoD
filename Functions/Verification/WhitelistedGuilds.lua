@@ -2,7 +2,7 @@ local function normalizeGuildName(guildName)
   if not guildName then
     return nil
   end
-
+  
   return string.lower(guildName)
 end
 

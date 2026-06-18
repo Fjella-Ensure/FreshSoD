@@ -1,0 +1,9 @@
+function FreshSoD_GetDeathTaxOwedCopper()
+  return FreshSoD_GetDBValue('deathTaxOwedCopper') or 0
+end
+
+function FreshSoD_AddDeathTaxOwedCopper(amount)
+  local owed = FreshSoD_GetDeathTaxOwedCopper() + amount
+  FreshSoD_SaveDBData('deathTaxOwedCopper', owed)
+  return owed
+end

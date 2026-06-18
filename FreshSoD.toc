@@ -22,6 +22,7 @@ Functions/DB/LocalCharacterVerification.lua
 Functions/DB/InitializeDBData.lua
 Functions/DB/GetDBValue.lua
 Functions/DB/SaveDBData.lua
+Functions/DB/DeathTaxOwed.lua
 
 ## Minimap
 Functions/MinimapButton/MinimapButton.lua
@@ -79,3 +80,10 @@ View/TabManager/TabManager.lua
 View/VerificationTab/VerificationTabWhisperInput.lua
 View/VerificationTab/VerificationTab.lua
 View/GuildBoardTab/GuildBoardTab.lua
+
+## Sunglitters
+Functions/Sunglitters/IsDeathTaxGuild.lua
+Functions/Sunglitters/ParseDeathTaxAddonMessage.lua
+Functions/Sunglitters/SendDeathTaxAddonMessage.lua
+Functions/Sunglitters/DeathGoldTaxAnnouncement.lua
+Functions/Sunglitters/HandleDeathTaxAddonMessage.lua
