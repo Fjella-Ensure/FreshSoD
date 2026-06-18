@@ -1,18 +1,13 @@
 ## Interface: 11508
 ## Title: SoD Guild Found
-## Version: 1.0.8
+## Version: 1.0.9
 ## Author: BonniesDad
 ## Notes: Addon to ensure a fresh SoD playthrough for guild found. 
 ## Dependencies: BonniesUtilities
+## OptionalDeps: LibStub, CallbackHandler-1.0, LibDataBroker-1.1, LibDBIcon-1.0
 ## SavedVariables: FRESH_SOD_DB
 
 FreshSoD.lua
-
-## Libs
-Libs/LibStub/LibStub.lua
-Libs/CallbackHandler-1.0/CallbackHandler-1.0.lua
-Libs/LibDataBroker-1.1/LibDataBroker-1.1.lua
-Libs/LibDBIcon-1.0/LibDBIcon-1.0.lua
 
 ## Functions
 

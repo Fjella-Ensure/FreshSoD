@@ -1,7 +1,17 @@
 function FreshSoD_MinimapButton_Initialize()
+    if not LibStub then
+        return
+    end
+
+    local ldb = LibStub('LibDataBroker-1.1', true)
+    local addonIcon = LibStub('LibDBIcon-1.0', true)
+    if not ldb or not addonIcon then
+        return
+    end
+
     local TEXTURE_PATH = 'Interface\\AddOns\\FreshSoD\\Textures'
 
-    local addonLDB = LibStub('LibDataBroker-1.1'):NewDataObject('FreshSoD', {
+    local addonLDB = ldb:NewDataObject('FreshSoD', {
         type = 'data source',
         text = 'SoD Guild Found',
         icon = TEXTURE_PATH .. '\\sod-guild-found-icon.png',
@@ -16,7 +26,6 @@ function FreshSoD_MinimapButton_Initialize()
         end,
     })
 
-    local addonIcon = LibStub('LibDBIcon-1.0')
     local minimapButtonSettings = FreshSoD_GetDBValue('minimapButton')
     addonIcon:Register('FreshSoD', addonLDB, minimapButtonSettings)
 end

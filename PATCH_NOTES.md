@@ -1,5 +1,11 @@
 # Patch Notes
 
+## 1.0.9 (2026-06-18)
+
+**FEATURES:**
+• Fix compatability issue with quetie for some peoples
+
+
 ## 1.0.8 (2026-06-18)
 
 **FEATURES:**
