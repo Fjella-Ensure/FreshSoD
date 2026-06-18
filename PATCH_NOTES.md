@@ -1,7 +1,12 @@
 # Patch Notes
 
+## 1.0.7 (2026-06-17)
+
+**FEATURES:**
+• Death tax guild announcement for Sunglitters guild
+
 ## 1.0.6 (2026-06-17)
-b
+
 **FEATURES:**
 • Send Mail warning message
 • Show remaining mail to return count
