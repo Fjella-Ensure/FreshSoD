@@ -1,7 +1,7 @@
 {
   "scripts": {
     "prettier": "prettier --write .",
-    "zip": "rsync -av --exclude='.*' Functions View Textures Audio Libs FreshSoD.lua FreshSoD.toc ToBeZipped/FreshSoD && cd ToBeZipped && zip -r FreshSoD.zip FreshSoD -x '*.DS_Store'"
+    "zip": "rsync -av --exclude='.*' Functions View Textures Audio FreshSoD.lua FreshSoD.toc ToBeZipped/FreshSoD && cd ToBeZipped && zip -r FreshSoD.zip FreshSoD -x '*.DS_Store'"
   },
   "devDependencies": {
     "@prettier/plugin-lua": "^0.0.3",
