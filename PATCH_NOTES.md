@@ -1,5 +1,11 @@
 # Patch Notes
 
+## 1.1.0 (2026-06-19)
+
+**HOTFIX:**
+• Return gold only mail rather than delete
+
+
 ## 1.0.9 (2026-06-18)
 
 **FEATURES:**
