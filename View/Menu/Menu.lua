@@ -192,4 +192,6 @@ function OpenFreshSoDSettingsToTab(tabIndex)
 end
 
 SLASH_FRESHSOD1 = '/freshsod'
-SlashCmdList['FRESHSOD'] = ToggleFreshSoDSettings
+SLASH_FRESHSOD2 = '/sgf'
+SLASH_FRESHSOD3 = '/sodguildfound'
+SlashCmdList['FRESHSOD'] = FreshSoD_ToggleFreshSoDSettings

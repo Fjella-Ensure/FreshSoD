@@ -1,5 +1,11 @@
 # Patch Notes
 
+## 1.1.1 (2026-06-19)
+
+**HOTFIX:**
+• slash command /sgf /sodguildfound /freshsod opens the menu
+
+
 ## 1.1.0 (2026-06-19)
 
 **HOTFIX:**
